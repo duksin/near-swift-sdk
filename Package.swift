@@ -38,7 +38,6 @@ let package = Package(
         .target(
             name: "NearSwift",
             dependencies: [
-                "KeychainAccess",
                 "AnyCodable",
                 "KeychainAccess",
                 .product(name: "TweetNacl", package: "tweetnacl-swiftwrap"),
