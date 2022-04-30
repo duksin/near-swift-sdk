@@ -1,15 +1,16 @@
-// swift-tools-version: 5.6
+// swift-tools-version: 5.5
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
-    name: "nearclientios",
+    name: "Near",
     platforms: [.iOS(.v13)],
     products: [
         .library(
-            name: "nearclientios",
-            targets: ["nearclientios"]),
+            name: "NearSwift",
+            targets: ["NearSwift"]
+        )
     ],
     dependencies: [
         .package(
@@ -21,12 +22,12 @@ let package = Package(
             .upToNextMajor(from: "0.5.0")
         ),
         .package(
-            url: "https://github.com/keefertaylor/Base58Swift.git",
-            from: "2.1.0"
-        ),
-        .package(
             url: "https://github.com/bitmark-inc/tweetnacl-swiftwrap.git",
             .upToNextMajor(from: "1.1.0")
+        ),
+        .package(
+            url: "https://github.com/keefertaylor/Base58Swift.git",
+            from: "2.1.0"
         ),
         .package(
             url: "https://github.com/kishikawakatsumi/KeychainAccess",
@@ -35,10 +36,11 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "nearclientios",
+            name: "NearSwift",
             dependencies: [
                 "KeychainAccess",
                 "AnyCodable",
+                "KeychainAccess",
                 .product(name: "TweetNacl", package: "tweetnacl-swiftwrap"),
                 .product(name: "secp256k1", package: "secp256k1.swift"),
                 "Base58Swift"

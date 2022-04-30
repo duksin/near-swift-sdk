@@ -1,6 +1,6 @@
 //
 //  Account.swift
-//  nearclientios
+//  NearSwift
 //
 //  Created by Dmitry Kurochka on 10/30/19.
 //  Copyright © 2019 NEAR Protocol. All rights reserved.
@@ -204,10 +204,10 @@ public final class Account {
   func createAndDeployContract(contractId: String, publicKey: PublicKey,
                                        data: [UInt8], amount: UInt128) async throws -> Account {
     let accessKey = fullAccessKey()
-    let actions = [nearclientios.createAccount(),
-                   nearclientios.transfer(deposit: amount),
-                   nearclientios.addKey(publicKey: publicKey, accessKey: accessKey),
-                   nearclientios.deployContract(code: data)]
+    let actions = [NearSwift.createAccount(),
+                   NearSwift.transfer(deposit: amount),
+                   NearSwift.addKey(publicKey: publicKey, accessKey: accessKey),
+                   NearSwift.deployContract(code: data)]
     let _ = try await signAndSendTransaction(receiverId: contractId, actions: actions)
     let contractAccount = Account(connection: connection, accountId: contractId)
     return contractAccount
@@ -215,33 +215,33 @@ public final class Account {
 
   @discardableResult
   func sendMoney(receiverId: String, amount: UInt128) async throws -> FinalExecutionOutcome {
-    return try await signAndSendTransaction(receiverId: receiverId, actions: [nearclientios.transfer(deposit: amount)])
+    return try await signAndSendTransaction(receiverId: receiverId, actions: [NearSwift.transfer(deposit: amount)])
   }
 
   @discardableResult
   func createAccount(newAccountId: String, publicKey: PublicKey,
                              amount: UInt128) async throws -> FinalExecutionOutcome {
     let accessKey = fullAccessKey()
-    let actions = [nearclientios.createAccount(),
-                   nearclientios.transfer(deposit: amount),
-                   nearclientios.addKey(publicKey: publicKey, accessKey: accessKey)]
+    let actions = [NearSwift.createAccount(),
+                   NearSwift.transfer(deposit: amount),
+                   NearSwift.addKey(publicKey: publicKey, accessKey: accessKey)]
     return try await signAndSendTransaction(receiverId: newAccountId, actions: actions)
   }
 
   @discardableResult
   func deleteAccount(beneficiaryId: String) async throws -> FinalExecutionOutcome {
     return try await signAndSendTransaction(receiverId: accountId,
-                                      actions: [nearclientios.deleteAccount(beneficiaryId: beneficiaryId)])
+                                      actions: [NearSwift.deleteAccount(beneficiaryId: beneficiaryId)])
   }
 
   private func deployContract(data: [UInt8]) async throws -> FinalExecutionOutcome {
-    return try await signAndSendTransaction(receiverId: accountId, actions: [nearclientios.deployContract(code: data)])
+    return try await signAndSendTransaction(receiverId: accountId, actions: [NearSwift.deployContract(code: data)])
   }
 
   func functionCall(contractId: String, methodName: ChangeMethod, args: [String: Any] = [:],
                             gas: UInt64?, amount: UInt128) async throws -> FinalExecutionOutcome {
     let gasValue = gas ?? DEFAULT_FUNC_CALL_AMOUNT
-    let actions = [nearclientios.functionCall(methodName: methodName, args: Data(json: args).bytes,
+    let actions = [NearSwift.functionCall(methodName: methodName, args: Data(json: args).bytes,
                                               gas: gasValue, deposit: amount)]
     return try await signAndSendTransaction(receiverId: contractId, actions: actions)
   }
@@ -257,17 +257,17 @@ public final class Account {
     } else {
       accessKey = fullAccessKey()
     }
-    return try await signAndSendTransaction(receiverId: accountId, actions: [nearclientios.addKey(publicKey: publicKey, accessKey: accessKey)])
+    return try await signAndSendTransaction(receiverId: accountId, actions: [NearSwift.addKey(publicKey: publicKey, accessKey: accessKey)])
   }
 
   @discardableResult
   func deleteKey(publicKey: PublicKey) async throws -> FinalExecutionOutcome {
-    return try await signAndSendTransaction(receiverId: accountId, actions: [nearclientios.deleteKey(publicKey: publicKey)])
+    return try await signAndSendTransaction(receiverId: accountId, actions: [NearSwift.deleteKey(publicKey: publicKey)])
   }
 
   private func stake(publicKey: PublicKey, amount: UInt128) async throws -> FinalExecutionOutcome {
     return try await signAndSendTransaction(receiverId: accountId,
-                                      actions: [nearclientios.stake(stake: amount, publicKey: publicKey)])
+                                      actions: [NearSwift.stake(stake: amount, publicKey: publicKey)])
   }
 
   func viewFunction<T: Decodable>(contractId: String, methodName: String, args: [String: Any] = [:]) async throws -> T {
