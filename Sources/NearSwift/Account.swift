@@ -201,7 +201,7 @@ public final class Account {
 
 
   @discardableResult
-  func createAndDeployContract(contractId: String, publicKey: PublicKey,
+  public func createAndDeployContract(contractId: String, publicKey: PublicKey,
                                        data: [UInt8], amount: UInt128) async throws -> Account {
     let accessKey = fullAccessKey()
     let actions = [NearSwift.createAccount(),
@@ -214,12 +214,12 @@ public final class Account {
   }
 
   @discardableResult
-  func sendMoney(receiverId: String, amount: UInt128) async throws -> FinalExecutionOutcome {
+  public func sendMoney(receiverId: String, amount: UInt128) async throws -> FinalExecutionOutcome {
     return try await signAndSendTransaction(receiverId: receiverId, actions: [NearSwift.transfer(deposit: amount)])
   }
 
   @discardableResult
-  func createAccount(newAccountId: String, publicKey: PublicKey,
+  public func createAccount(newAccountId: String, publicKey: PublicKey,
                              amount: UInt128) async throws -> FinalExecutionOutcome {
     let accessKey = fullAccessKey()
     let actions = [NearSwift.createAccount(),
@@ -229,7 +229,7 @@ public final class Account {
   }
 
   @discardableResult
-  func deleteAccount(beneficiaryId: String) async throws -> FinalExecutionOutcome {
+  public func deleteAccount(beneficiaryId: String) async throws -> FinalExecutionOutcome {
     return try await signAndSendTransaction(receiverId: accountId,
                                       actions: [NearSwift.deleteAccount(beneficiaryId: beneficiaryId)])
   }
@@ -238,7 +238,7 @@ public final class Account {
     return try await signAndSendTransaction(receiverId: accountId, actions: [NearSwift.deployContract(code: data)])
   }
 
-  func functionCall(contractId: String, methodName: ChangeMethod, args: [String: Any] = [:],
+  public func functionCall(contractId: String, methodName: ChangeMethod, args: [String: Any] = [:],
                             gas: UInt64?, amount: UInt128) async throws -> FinalExecutionOutcome {
     let gasValue = gas ?? DEFAULT_FUNC_CALL_AMOUNT
     let actions = [NearSwift.functionCall(methodName: methodName, args: Data(json: args).bytes,
@@ -248,7 +248,7 @@ public final class Account {
 
   // TODO: expand this API to support more options.
   @discardableResult
-  func addKey(publicKey: PublicKey, contractId: String?, methodName: String?,
+  public func addKey(publicKey: PublicKey, contractId: String?, methodName: String?,
                       amount: UInt128?) async throws -> FinalExecutionOutcome {
     let accessKey: AccessKey
     if let contractId = contractId, !contractId.isEmpty {
@@ -261,7 +261,7 @@ public final class Account {
   }
 
   @discardableResult
-  func deleteKey(publicKey: PublicKey) async throws -> FinalExecutionOutcome {
+  public func deleteKey(publicKey: PublicKey) async throws -> FinalExecutionOutcome {
     return try await signAndSendTransaction(receiverId: accountId, actions: [NearSwift.deleteKey(publicKey: publicKey)])
   }
 
@@ -270,7 +270,7 @@ public final class Account {
                                       actions: [NearSwift.stake(stake: amount, publicKey: publicKey)])
   }
 
-  func viewFunction<T: Decodable>(contractId: String, methodName: String, args: [String: Any] = [:]) async throws -> T {
+  public func viewFunction<T: Decodable>(contractId: String, methodName: String, args: [String: Any] = [:]) async throws -> T {
     let data = Data(json: args).base64EncodedString()
     let result: QueryResult = try await connection.provider.query(params: [
       "request_type": "call_function",
@@ -294,7 +294,7 @@ public final class Account {
   }
 
   /// Returns array of {access_key: AccessKey, public_key: PublicKey} items.
-  func getAccessKeys() async throws -> KeyBoxes {
+  public func getAccessKeys() async throws -> KeyBoxes {
     let response: KeyBoxes = try await connection.provider.query(params: [
         "request_type": "view_access_key_list",
         "finality": Finality.optimistic.rawValue,
@@ -303,7 +303,7 @@ public final class Account {
     return response
   }
 
-  func getAccountDetails() async throws -> AccountDetails {
+  public func getAccountDetails() async throws -> AccountDetails {
     // TODO: update the response value to return all the different keys, not just app keys.
     // Also if we need this function, or getAccessKeys is good enough.
     let accessKeys = try await getAccessKeys()
