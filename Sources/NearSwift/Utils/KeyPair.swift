@@ -110,6 +110,7 @@ public protocol KeyPair {
     func sign(message: [UInt8]) throws -> SignatureProtocol
     func verify(message: [UInt8], signature: [UInt8]) throws -> Bool
     func toString() -> String
+    func bytes() throws -> [UInt8]
     func getPublicKey() -> PublicKey
 }
 
@@ -204,6 +205,10 @@ extension KeyPairEd25519: KeyPair {
     func getSecretKey() -> String {
         return secretKey
     }
+    
+    public func bytes() throws -> [UInt8] {
+        try secretKey.bytes
+    }
 }
 
 public enum Secp256k1Error: Error {
@@ -288,6 +293,10 @@ public struct KeyPairSecp256k1: Equatable {
 }
 
 extension KeyPairSecp256k1: KeyPair {
+    public func bytes() throws -> [UInt8] {
+        try secretKey.bytes
+    }
+    
     public func sign(message: [UInt8]) throws -> SignatureProtocol {
         // this is largely based on the MIT Licensed implementation here — https://github.com/argentlabs/web3.swift/blob/04c10ec83861ee483efabb72850d51573cfa2545/web3swift/src/Utils/KeyUtil.swift
         guard let context = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY)) else {
