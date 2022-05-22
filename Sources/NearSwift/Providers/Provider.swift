@@ -182,7 +182,7 @@ public enum FinalExecutionStatus: Decodable, Equatable {
 }
 
 public struct ExecutionOutcomeWithId: Decodable, Equatable {
-  let id: String
+  public let id: String
   let outcome: ExecutionOutcome
 }
 
@@ -195,7 +195,7 @@ public struct ExecutionOutcome: Decodable, Equatable {
 
 public struct FinalExecutionOutcome: Decodable, Equatable {
   let status: FinalExecutionStatus
-  let transactionOutcome: ExecutionOutcomeWithId
+  public let transactionOutcome: ExecutionOutcomeWithId
   let receiptsOutcome: [ExecutionOutcomeWithId]
   let receipts: AnyDecodable?
 }
