@@ -83,7 +83,7 @@ public final class Account {
         return try await fetchState()
     }
     
-    init(connection: Connection, accountId: String) {
+    public init(connection: Connection, accountId: String) {
         self.connection = connection;
         self.accountId = accountId;
     }
