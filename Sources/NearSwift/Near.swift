@@ -50,7 +50,7 @@ public struct NearConfig: NearConfigProtocol {
 
 public struct Near {
   let config: NearConfigProtocol
-  let connection: Connection
+  public let connection: Connection
   private let accountCreator: AccountCreator?
 }
 
