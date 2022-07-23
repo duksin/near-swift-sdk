@@ -41,6 +41,8 @@ public struct AccountState: Codable {
     public let codeHash: String
     public let storagePaidAt: Number
     public let storageUsage: Number
+    
+    public static let initial: AccountState = .init(accountId: nil, staked: nil, locked: "0", amount: "0", codeHash: "", storagePaidAt: 0, storageUsage: 0)
 }
 
 public struct KeyBox: Decodable {
