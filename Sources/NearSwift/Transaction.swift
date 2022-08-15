@@ -458,3 +458,22 @@ func signTransaction(receiverId: String, nonce: UInt64, actions: [Action], block
   let signedTx = SignedTransaction(transaction: transaction, signature: CodableSignature(signature: signature.signature, curve: publicKey.keyType))
   return (hash, signedTx)
 }
+
+func signTransaction(
+    trx: CodableTransaction,
+    signer: Signer,
+    accountId: String,
+    networkId: String
+) async throws -> ([UInt8], SignedTransaction) {
+  let message = try BorshEncoder().encode(trx)
+  let hash = message.digest
+
+  let signature = try await signer.signMessage(message: message.bytes, accountId: accountId, networkId: networkId)
+  
+  let signedTx = SignedTransaction(
+    transaction: trx,
+    signature: CodableSignature(signature: signature.signature, curve: trx.publicKey.keyType)
+  )
+  
+  return (hash, signedTx)
+}
