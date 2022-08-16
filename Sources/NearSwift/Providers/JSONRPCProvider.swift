@@ -102,7 +102,8 @@ extension JSONRPCProvider: Provider {
   public func sendTransactionAsync(signedTransaction: SignedTransaction) async throws -> SimpleRPCResult {
     let data = try BorshEncoder().encode(signedTransaction)
     let params = [data.base64EncodedString()]
-//    debugPrint("params \(params)")
+    print("LOG \(params)")
+
     return try await sendJsonRpc(method: "broadcast_tx_async", params: params)
   }
   

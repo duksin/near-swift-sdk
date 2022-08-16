@@ -194,12 +194,14 @@ public final class Account {
     
     public func signAndSendTransactionAsync(trx: CodableTransaction) async throws -> SimpleRPCResult {
         try await ready()
-        let (_, signedTx) = try await signTransaction(
+        let (hash, signedTx) = try await signTransaction(
             trx: trx,
             signer: connection.signer,
             accountId: accountId,
             networkId: connection.networkId
         )
+        
+        print("LOG", hash, signedTx)
         
         let outcome = try await connection.provider.sendTransactionAsync(signedTransaction: signedTx)
         return outcome
