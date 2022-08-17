@@ -46,6 +46,7 @@ extension JSONRPCProvider {
                                   "id": getId(),
                                   "jsonrpc": "2.0"]
     let json = try await fetchJson(connection: connection, json: request)
+    
     return try await processJsonRpc(request: request, json: json)
   }
   
@@ -54,12 +55,14 @@ extension JSONRPCProvider {
                                   "params": paramsDict,
                                   "id": getId(),
                                   "jsonrpc": "2.0"]
+
     let json = try await fetchJson(connection: connection, json: request)
+
     return try await processJsonRpc(request: request, json: json)
   }
   
   func processJsonRpc<T: Decodable>(request: [String: Any], json: Any) async throws -> T {
-    let data = try JSONSerialization.data(withJSONObject: json, options: [])
+    let data = try JSONSerialization.data(withJSONObject: json, options: .fragmentsAllowed)
 //    debugPrint("=====================")
 //    print(T.self)
 //    print(String(decoding: data, as: UTF8.self))
@@ -102,7 +105,6 @@ extension JSONRPCProvider: Provider {
   public func sendTransactionAsync(signedTransaction: SignedTransaction) async throws -> SimpleRPCResult {
     let data = try BorshEncoder().encode(signedTransaction)
     let params = [data.base64EncodedString()]
-    print("LOG \(params)")
 
     return try await sendJsonRpc(method: "broadcast_tx_async", params: params)
   }

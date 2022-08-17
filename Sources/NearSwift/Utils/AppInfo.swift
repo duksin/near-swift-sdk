@@ -6,10 +6,7 @@
 //
 
 import Foundation
-
-#if !os(macOS)
 import UIKit
-#endif
 
 extension UIApplication {
   static var urlSchemes: [String]? {

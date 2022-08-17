@@ -147,7 +147,7 @@ public final class Account {
         return try BorshDecoder().decode(CodableTransaction.self, from: message)
     }
     
-    private func signAndSendTransaction(receiverId: String, actions: [Action]) async throws -> FinalExecutionOutcome {
+    public func signAndSendTransaction(receiverId: String, actions: [Action]) async throws -> FinalExecutionOutcome {
         try await ready()
         guard _accessKey != nil else {
             throw TypedError.error(type: "Can not sign transactions, initialize account with available public key in Signer.", message: "KeyNotFound")
@@ -191,22 +191,7 @@ public final class Account {
         // TODO: deal with timeout on node side.
         return result
     }
-    
-    public func signAndSendTransactionAsync(trx: CodableTransaction) async throws -> SimpleRPCResult {
-        try await ready()
-        let (hash, signedTx) = try await signTransaction(
-            trx: trx,
-            signer: connection.signer,
-            accountId: accountId,
-            networkId: connection.networkId
-        )
-        
-        print("LOG", hash, signedTx)
-        
-        let outcome = try await connection.provider.sendTransactionAsync(signedTransaction: signedTx)
-        return outcome
-    }
-    
+
     public func signAndSendTransactionAsync(receiverId: String, actions: [Action]) async throws -> SimpleRPCResult {
         try await ready()
         guard _accessKey != nil else {
