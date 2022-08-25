@@ -143,7 +143,11 @@ public final class Account {
                                message: "RetriesExceeded")
     }
     
-    private func signAndSendTransaction(receiverId: String, actions: [Action]) async throws -> FinalExecutionOutcome {
+    public func decodeTransaction(message: Data) throws -> CodableTransaction {
+        return try BorshDecoder().decode(CodableTransaction.self, from: message)
+    }
+    
+    public func signAndSendTransaction(receiverId: String, actions: [Action]) async throws -> FinalExecutionOutcome {
         try await ready()
         guard _accessKey != nil else {
             throw TypedError.error(type: "Can not sign transactions, initialize account with available public key in Signer.", message: "KeyNotFound")
@@ -151,6 +155,7 @@ public final class Account {
         
         let status = try await connection.provider.status()
         _accessKey!.nonce += 1
+    
         let blockHash = status.syncInfo.latestBlockHash.baseDecoded
         let (txHash, signedTx) = try await signTransaction(receiverId: receiverId,
                                                            nonce: _accessKey!.nonce,
@@ -176,14 +181,17 @@ public final class Account {
         printLogs(contractId: signedTx.transaction.receiverId, logs: flatLogs)
         
         if case .failure(let error) = result.status {
-            throw TypedError.error(type: "Transaction \(result.transactionOutcome.id) failed. \(error.errorMessage ?? "")",
-                                   message: error.errorType)
+            throw TypedError.error(
+                type: "Transaction \(result.transactionOutcome.id) failed. \(error.errorMessage ?? "")",
+                message: error.errorType
+            )
         }
+
         // TODO: if Tx is Unknown or Started.
         // TODO: deal with timeout on node side.
         return result
     }
-    
+
     public func signAndSendTransactionAsync(receiverId: String, actions: [Action]) async throws -> SimpleRPCResult {
         try await ready()
         guard _accessKey != nil else {
@@ -262,13 +270,12 @@ public final class Account {
     public func addKey(
         publicKey: PublicKey,
         contractId: String?,
-        methodName: String?,
+        methodNames: [String]?,
         amount: UInt128?
     ) async throws -> FinalExecutionOutcome {
         let accessKey: AccessKey
         if let contractId = contractId, !contractId.isEmpty {
-            let methodNames = methodName.flatMap {[$0].filter {!$0.isEmpty}} ?? []
-            accessKey = functionCallAccessKey(receiverId: contractId, methodNames: methodNames, allowance: amount)
+            accessKey = functionCallAccessKey(receiverId: contractId, methodNames: methodNames ?? [], allowance: amount)
         } else {
             accessKey = fullAccessKey()
         }
