@@ -205,32 +205,32 @@ public struct TotalWeight: Codable {
 }
 
 public struct BlockHeader: Codable {
-  let height: Number
-  let epochId: String
-  let nextEpochId: String
-  let hash: String
-  let prevHash: String
-  let prevStateRoot: String
-  let chunkReceiptsRoot: String
-  let chunkHeadersRoot: String
-  let chunkTxRoot: String
-  let outcomeRoot: String
-  let chunksIncluded: Number
-  let challengesRoot: String
-  let timestamp: Number
-  let timestampNanosec: String
-  let randomValue: String
-  let validatorProposals: [ValidatorProposal]
-  let chunkMask: [Bool]
-  let gasPrice: String
-  let rentPaid: String
-  let validatorReward: String
-  let totalSupply: String
+  public let height: Number
+  public let epochId: String
+  public let nextEpochId: String
+  public let hash: String
+  public let prevHash: String
+  public let prevStateRoot: String
+  public let chunkReceiptsRoot: String
+  public let chunkHeadersRoot: String
+  public let chunkTxRoot: String
+  public let outcomeRoot: String
+  public let chunksIncluded: Number
+  public let challengesRoot: String
+  public let timestamp: Number
+  public let timestampNanosec: String
+  public let randomValue: String
+  public let validatorProposals: [ValidatorProposal]
+  public let chunkMask: [Bool]
+  public let gasPrice: String
+  public let rentPaid: String
+  public let validatorReward: String
+  public let totalSupply: String
   //let challenges_result: [Any]
-  let lastFinalBlock: String
-  let lastDsFinalBlock: String
-  let nextBpHash: String
-  let blockMerkleRoot: String
+  public let lastFinalBlock: String
+  public let lastDsFinalBlock: String
+  public let nextBpHash: String
+  public let blockMerkleRoot: String
 }
 
 public typealias ChunkHash = String
@@ -279,15 +279,15 @@ public struct ChunkResult: Codable {
 public struct TransactionBody: Codable {}
 
 public struct Transaction: Codable {
-  let hash: String
-  let public_key: String
-  let signature: String
-  let body: TransactionBody
+  public let hash: String
+  public let public_key: String
+  public let signature: String
+  public let body: TransactionBody
 }
 
 public struct BlockResult: Codable {
-  let header: BlockHeader
-  let transactions: [Transaction]?
+  public let header: BlockHeader
+  public let transactions: [Transaction]?
 }
 
 public struct BlockChange: Codable {

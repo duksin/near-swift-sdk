@@ -76,7 +76,7 @@ public struct QueryResult: Equatable, Decodable {
 }
 
 public final class Account {
-    let connection: Connection
+    public let connection: Connection
     public let accountId: String
     private var _state: AccountState?
     private var _accessKey: AccessKey?

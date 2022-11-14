@@ -37,8 +37,8 @@ public extension ConnectionConfigProtocol {
 }
 
 public struct Connection {
-  let networkId: String
-  let provider: Provider
+  public let networkId: String
+  public let provider: Provider
   let signer: Signer
 }
 
