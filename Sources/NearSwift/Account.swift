@@ -265,6 +265,14 @@ public final class Account {
         return try await signAndSendTransaction(receiverId: contractId, actions: actions)
     }
     
+    public func functionCall(contractId: String, methodName: ChangeMethod, args: Data = .init(),
+                      gas: UInt64?, amount: UInt128) async throws -> FinalExecutionOutcome {
+        let gasValue = gas ?? DEFAULT_FUNC_CALL_AMOUNT
+        let actions = [NearSwift.functionCall(methodName: methodName, args: args.bytes,
+                                              gas: gasValue, deposit: amount)]
+        return try await signAndSendTransaction(receiverId: contractId, actions: actions)
+    }
+    
     // TODO: expand this API to support more options.
     @discardableResult
     public func addKey(
