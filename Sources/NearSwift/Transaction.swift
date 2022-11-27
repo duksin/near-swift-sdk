@@ -169,6 +169,19 @@ public struct FunctionCall: IAction {
     public let args: [UInt8]
     public let gas: UInt64
     public let deposit: UInt128
+    public init(methodName: String, args: [UInt8], gas: UInt64, deposit: UInt128) {
+        self.methodName = methodName
+        self.args = args
+        self.gas = gas
+        self.deposit = deposit
+    }
+    
+    public init(methodName: String, args: Data, gas: UInt64, deposit: UInt128) {
+        self.methodName = methodName
+        self.args = args.bytes
+        self.gas = gas
+        self.deposit = deposit
+    }
 }
 
 extension FunctionCall: BorshCodable {
