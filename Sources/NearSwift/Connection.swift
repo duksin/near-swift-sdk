@@ -39,7 +39,7 @@ public extension ConnectionConfigProtocol {
 public struct Connection {
   public let networkId: String
   public let provider: Provider
-  let signer: Signer
+  public let signer: Signer
 }
 
 public extension Connection {
